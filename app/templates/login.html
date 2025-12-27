@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Login – Dossiê Confidencial{% endblock %}
+
+{% block content %}
+
+<section class="login-box">
+
+    <h2>ACESSO AO SISTEMA</h2>
+    <p class="login-subtitle">Identificação obrigatória</p>
+
+    <form method="post" action="/login">
+
+        <label for="username">Codinome do Agente</label>
+        <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            placeholder="Digite seu username"
+            required
+        >
+
+        <label for="password">Chave de Acesso</label>
+        <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="••••••••"
+            required
+        >
+
+        <button type="submit">
+            AUTENTICAR
+        </button>
+
+    </form>
+
+    {% if error %}
+        <p class="error-message">{{ error }}</p>
+    {% endif %}
+
+</section>
+
+{% endblock %}

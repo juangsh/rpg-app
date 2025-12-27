@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Cartas{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <header class="panel-header">
+    <div>
+      <h2>CARTAS</h2>
+      <p class="panel-subtitle">Catálogo de cartas do RPG.</p>
+    </div>
+    <div class="panel-actions">
+      <a class="btn-secondary" href="/player">VOLTAR</a>
+      <a class="btn-secondary" href="/logout">SAIR</a>
+    </div>
+  </header>
+
+  <div class="grid">
+    <a class="card" href="/cards/armas" style="text-decoration:none;">
+      <h3>ARMAS</h3>
+      <p class="muted">Filtros por classe, raridade e A–Z.</p>
+    </a>
+
+    <a class="card" href="/cards/inimigos" style="text-decoration:none;">
+      <h3>INIMIGOS</h3>
+      <p class="muted">Filtros por raridade e A–Z.</p>
+    </a>
+
+    <a class="card" href="/cards/locais" style="text-decoration:none;">
+      <h3>LOCAIS</h3>
+      <p class="muted">Filtros por raridade e A–Z.</p>
+    </a>
+  </div>
+</section>
+{% endblock %}

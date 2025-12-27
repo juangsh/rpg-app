@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}RPG – Dossiê Confidencial{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="{{ url_for('static', path='css/dossier.css') }}">
+</head>
+
+<body>
+    <div class="dossier">
+
+        <header class="dossier-header">
+            <h1>ARQUIVO CONFIDENCIAL</h1>
+            <p class="subtitle">Acesso restrito · Sistema de Operações RPG</p>
+        </header>
+
+        <main class="dossier-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer class="dossier-footer">
+            <p>Classificação: ULTRA SECRETO</p>
+        </footer>
+
+    </div>
+</body>
+</html>
+<style>
+.panel-actions,
+.sheet-header .panel-actions {
+  position: relative;
+  z-index: 10;
+}
+
+.panel-actions a,
+.panel-actions button {
+  pointer-events: auto;
+}
+</style>

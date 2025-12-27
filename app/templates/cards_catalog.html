@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Cartas{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <header class="panel-header">
+    <div>
+      <h2>CATÁLOGO — {{ card_type|upper }}</h2>
+      <p class="panel-subtitle">
+        Filtros por raridade e ordenação. Armas também filtram por classe.
+      </p>
+    </div>
+
+    <div class="panel-actions" style="display:flex; gap:8px; align-items:center;">
+      {% if request.query_params.get("from") == "player" %}
+        <button
+          type="button"
+          class="btn-secondary"
+          onclick="window.location.href='/player'">
+          VOLTAR
+        </button>
+      {% else %}
+        <button
+          type="button"
+          class="btn-secondary"
+          onclick="window.location.href='/master'">
+          VOLTAR
+        </button>
+      {% endif %}
+
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="window.location.href='/logout'">
+        SAIR
+      </button>
+    </div>
+  </header>
+
+  <div class="card" style="margin-bottom:16px;">
+    <form method="get" class="form" style="display:grid; gap:10px;">
+
+      {% if card_type == "armas" %}
+        <label>CLASSE</label>
+        <select name="class_type">
+          <option value="">Todas</option>
+          {% for v, label in classes %}
+            <option value="{{ v }}" {% if v == selected_class %}selected{% endif %}>
+              {{ label }}
+            </option>
+          {% endfor %}
+        </select>
+      {% endif %}
+
+      <label>RARIDADE</label>
+      <select name="rarity">
+        <option value="">Todas</option>
+        {% for value, label in rarity_options %}
+          <option value="{{ value }}" {% if selected_rarity == value %}selected{% endif %}>
+            {{ label }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <label>ORDENAÇÃO</label>
+      <select name="sort">
+        <option value="az" {% if selected_sort == "az" %}selected{% endif %}>A–Z</option>
+        <option value="za" {% if selected_sort == "za" %}selected{% endif %}>Z–A</option>
+      </select>
+
+      <!-- preserva origem ao filtrar -->
+      {% if request.query_params.get("from") %}
+        <input type="hidden" name="from" value="{{ request.query_params.get('from') }}">
+      {% endif %}
+
+      <button class="btn-primary" type="submit">APLICAR</button>
+    </form>
+  </div>
+
+  {% if cards and cards|length > 0 %}
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:12px;">
+      {% for c in cards %}
+        <div class="card" style="padding:10px;">
+          <img src="{{ c.image_path }}"
+               alt="{{ c.name }}"
+               style="width:100%; border-radius:10px; display:block;">
+          <div style="margin-top:8px;">
+            <div style="font-weight:800; font-size:12px; letter-spacing:.4px;">
+              {{ c.name }}
+            </div>
+            <div class="muted" style="font-size:12px;">
+              {{ c.rarity|upper }}{% if c.class_type %} • {{ c.class_type|upper }}{% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty">Nenhuma carta encontrada com esses filtros.</div>
+  {% endif %}
+</section>
+{% endblock %}

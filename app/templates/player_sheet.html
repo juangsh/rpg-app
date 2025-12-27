@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Ficha do Personagem{% endblock %}
+
+{% block content %}
+<section class="sheet">
+  <header class="sheet-header">
+    <div>
+      <h2>FICHA DO PERSONAGEM</h2>
+      <p class="panel-subtitle">Preencha e clique em SALVAR. Funciona no celular.</p>
+    </div>
+
+    <div class="panel-actions" style="display:flex; gap:8px; align-items:center;">
+      {% if show_back %}
+        <button
+          type="button"
+          class="btn-secondary"
+          onclick="window.location.href='/master'">
+          VOLTAR
+        </button>
+      {% endif %}
+
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="window.location.href='/logout'">
+        SAIR
+      </button>
+    </div>
+  </header>
+
+  <form method="post"
+        action="{% if show_back %}/player/{{ user.id }}/update{% else %}/player/update{% endif %}"
+        class="card form">
+
+    <h3>DADOS DO PERSONAGEM</h3>
+
+    <label style="display:flex; align-items:center; gap:8px;">
+      Nome do personagem
+
+      <!-- ÍCONE DE CARTAS -->
+      <button
+        type="button"
+        title="Abrir catálogo de cartas"
+        onclick="window.location.href='/cards?from=player'"
+        style="
+          background:none;
+          border:none;
+          font-size:18px;
+          line-height:1;
+          cursor:pointer;
+          padding:0;
+        ">
+        🃏
+      </button>
+    </label>
+
+    <input name="name" type="text" value="{{ c.name }}" required>
+
+    <div class="grid">
+      <div>
+        <label>Idade</label>
+        <input name="age" type="text" value="{{ c.age }}">
+      </div>
+      <div>
+        <label>Ocupação</label>
+        <input name="occupation" type="text" value="{{ c.occupation }}">
+      </div>
+      <div>
+        <label>Level</label>
+        <input name="level" type="text" value="{{ c.level }}">
+      </div>
+      <div>
+        <label>Filiação</label>
+        <input name="affiliation" type="text" value="{{ c.affiliation }}">
+      </div>
+    </div>
+
+    <label>Personalidade</label>
+    <select name="personality">
+      <option value="hero" {% if c.personality == "hero" %}selected{% endif %}>Herói</option>
+      <option value="antihero" {% if c.personality == "antihero" %}selected{% endif %}>Anti-herói</option>
+      <option value="villain" {% if c.personality == "villain" %}selected{% endif %}>Vilão</option>
+    </select>
+
+    <hr class="sep">
+
+    <h3>ATRIBUTOS (1 a 100)</h3>
+
+    <div class="grid">
+      <div>
+        <label>Heroísmo</label>
+        <input name="heroism" type="number" min="1" max="100" value="{{ c.heroism }}" required>
+      </div>
+      <div>
+        <label>Agilidade</label>
+        <input name="agility" type="number" min="1" max="100" value="{{ c.agility }}" required>
+      </div>
+      <div>
+        <label>Intelecto</label>
+        <input name="intellect" type="number" min="1" max="100" value="{{ c.intellect }}" required>
+      </div>
+      <div>
+        <label>Força</label>
+        <input name="strength" type="number" min="1" max="100" value="{{ c.strength }}" required>
+      </div>
+      <div>
+        <label>Vontade</label>
+        <input name="willpower" type="number" min="1" max="100" value="{{ c.willpower }}" required>
+      </div>
+      <div>
+        <label>Vigor</label>
+        <input name="vigor" type="number" min="1" max="100" value="{{ c.vigor }}" required>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <label>Pontos de vida</label>
+        <input name="hp" type="number" min="0" max="999" value="{{ c.hp }}" required>
+      </div>
+      <div>
+        <label>Pontos heróicos</label>
+        <input name="hero_points" type="number" min="0" max="999" value="{{ c.hero_points }}" required>
+      </div>
+    </div>
+
+    <hr class="sep">
+
+    <h3>ANOTAÇÕES</h3>
+    <textarea name="notes" placeholder="Anotações livres...">{{ c.notes }}</textarea>
+
+    <h3>INVENTÁRIO</h3>
+    <textarea name="inventory_text" placeholder="Itens, dinheiro, equipamentos...">{{ c.inventory_text }}</textarea>
+
+    <h3>HABILIDADES</h3>
+    <textarea name="skills_text" placeholder="Habilidades, poderes, passivas...">{{ c.skills_text }}</textarea>
+
+    <button class="btn-primary" type="submit">SALVAR</button>
+
+  </form>
+</section>
+{% endblock %}

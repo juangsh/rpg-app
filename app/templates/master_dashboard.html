@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Painel do Mestre{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <header class="panel-header">
+    <div>
+      <h2>PAINEL DO MESTRE</h2>
+      <p class="panel-subtitle">
+        Controle de jogadores, fichas e sessões (acesso restrito).
+      </p>
+    </div>
+
+    <div class="panel-actions" style="display:flex; gap:8px; align-items:center;">
+      <!-- ACESSO AO CATÁLOGO -->
+      <button
+        type="button"
+        class="icon-btn"
+        title="Catálogo de Cartas"
+        onclick="window.location.href='/cards'">
+        🃏
+      </button>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="window.location.href='/logout'">
+        SAIR
+      </button>
+    </div>
+  </header>
+
+  {% if error %}
+  <div class="alert alert-error">{{ error }}</div>
+  {% endif %}
+
+  {% if success %}
+  <div class="alert alert-success">{{ success }}</div>
+  {% endif %}
+
+  <div class="grid">
+    <!-- CRIAR JOGADOR -->
+    <div class="card">
+      <h3>CRIAR JOGADOR</h3>
+      <p class="muted">
+        Um jogador = um personagem (pelo menos nesse início). Você cria os usuários e entrega o username/senha.
+      </p>
+
+      <form method="post" action="/master/create-player" class="form">
+        <label>USERNAME DO JOGADOR</label>
+        <input name="username" type="text" placeholder="ex: agente_fox" required>
+
+        <label>SENHA TEMPORÁRIA</label>
+        <input name="password" type="text" placeholder="defina uma senha inicial" required>
+
+        <button class="btn-primary" type="submit">CRIAR</button>
+      </form>
+
+      <p class="small muted" style="margin-top:12px;">
+        Dica: depois, a gente pode implementar “troca de senha no primeiro login”.
+      </p>
+    </div>
+
+    <!-- JOGADORES -->
+    <div class="card">
+      <h3>JOGADORES</h3>
+      <p class="muted">
+        A lista abaixo é renderizada pelo backend.
+      </p>
+
+      {% if players and players|length > 0 %}
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>USERNAME</th>
+              <th>ROLE</th>
+              <th>AÇÕES</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in players %}
+            <tr>
+              <td>{{ p.id }}</td>
+              <td>{{ p.username }}</td>
+              <td>{{ p.role }}</td>
+              <td>
+                <div class="actions">
+
+                  <!-- ABRIR FICHA -->
+                  <button
+                    type="button"
+                    class="icon-btn"
+                    title="Abrir ficha"
+                    onclick="window.location.href='/player/{{ p.id }}'">
+                    ✏️
+                  </button>
+
+                  <!-- RESET SENHA -->
+                  <form method="post"
+                        action="/master/reset-password/{{ p.id }}"
+                        onsubmit="return confirm('Resetar a senha de {{ p.username }}?');">
+                    <button type="submit"
+                            class="icon-btn icon-warn"
+                            title="Resetar senha">🔑</button>
+                  </form>
+
+                  <!-- EXCLUIR -->
+                  <form method="post"
+                        action="/master/delete-player/{{ p.id }}"
+                        onsubmit="return confirm('Excluir {{ p.username }}? Isso apaga a ficha também.');">
+                    <button type="submit"
+                            class="icon-btn icon-danger"
+                            title="Excluir jogador">🗑️</button>
+                  </form>
+
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty">Nenhum jogador cadastrado ainda.</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ESTILO LOCAL PARA ÍCONES -->
+<style>
+.actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.actions form {
+  margin: 0;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.icon-btn:hover {
+  background: #f0f0f0;
+}
+
+.icon-warn {
+  border-color: #f0c36d;
+}
+
+.icon-danger {
+  border-color: #e57373;
+}
+
+.icon-danger:hover {
+  background: #fdeaea;
+}
+</style>
+
+{% endblock %}
