@@ -42,9 +42,11 @@ def login(
             status_code=401
         )
 
-    # Login autentica e delega a decisão de destino para /me
     resp = RedirectResponse(url="/me", status_code=303)
-    set_session(resp, user.id)
+
+    # ✅ IMPORTANTE: agora passa request também
+    set_session(request, resp, user.id)
+
     return resp
 
 
@@ -54,7 +56,6 @@ def me_redirect(request: Request, db: Session = Depends(get_db)):
     if not user:
         return RedirectResponse(url="/login", status_code=303)
 
-    # Força troca de senha no primeiro login (principalmente para players)
     if getattr(user, "force_password_change", False):
         return RedirectResponse(url="/change-password", status_code=303)
 
@@ -71,7 +72,6 @@ def change_password_page(request: Request, db: Session = Depends(get_db)):
     if not user:
         return RedirectResponse(url="/login", status_code=303)
 
-    # Se não for necessário trocar, manda para /me
     if not getattr(user, "force_password_change", False):
         return RedirectResponse(url="/me", status_code=303)
 
@@ -116,9 +116,11 @@ def change_password_submit(
     user.force_password_change = False
     db.commit()
 
-    # Opcional: reemitir cookie de sessão (boa prática)
     resp = RedirectResponse(url="/me", status_code=303)
-    set_session(resp, user.id)
+
+    # ✅ IMPORTANTE: reemitir cookie com secure correto
+    set_session(request, resp, user.id)
+
     return resp
 
 
